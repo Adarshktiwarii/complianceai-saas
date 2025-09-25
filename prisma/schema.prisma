@@ -1,0 +1,208 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String
+  phone         String?
+  passwordHash  String?   @map("password_hash")
+  emailVerified Boolean   @default(false) @map("email_verified")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  
+  companies     Company[]
+  sessions      UserSession[]
+  auditLogs     AuditLog[]
+
+  @@map("users")
+}
+
+model Company {
+  id                String    @id @default(uuid())
+  userId            String    @map("user_id")
+  companyName       String    @map("company_name")
+  industry          String?
+  companyType       String    @default("private_limited") @map("company_type")
+  incorporationDate DateTime? @map("incorporation_date") @db.Date
+  cin               String?
+  gstin             String?
+  pan               String?
+  registeredAddress String?   @map("registered_address")
+  businessAddress   String?   @map("business_address")
+  state             String?
+  city              String?
+  pincode           String?
+  authorizedCapital Decimal?  @map("authorized_capital")
+  paidUpCapital     Decimal?  @map("paid_up_capital")
+  directorDetails   Json?     @map("director_details")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptions     Subscription[]
+  documents         GeneratedDocument[]
+  complianceTasks   ComplianceTask[]
+  payments          Payment[]
+  aiInteractions    AiInteraction[]
+  auditLogs         AuditLog[]
+
+  @@map("companies")
+}
+
+model Subscription {
+  id                   String    @id @default(uuid())
+  companyId            String    @map("company_id")
+  planType             String    @map("plan_type")
+  status               String    @default("active")
+  currentPeriodStart   DateTime  @map("current_period_start")
+  currentPeriodEnd     DateTime  @map("current_period_end")
+  razorpaySubscriptionId String? @map("razorpay_subscription_id")
+  razorpayCustomerId   String?   @map("razorpay_customer_id")
+  monthlyPrice         Decimal   @map("monthly_price")
+  documentsUsed        Int       @default(0) @map("documents_used")
+  documentsLimit       Int       @map("documents_limit")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+  
+  company              Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  payments             Payment[]
+
+  @@map("subscriptions")
+}
+
+model DocumentTemplate {
+  id               String    @id @default(uuid())
+  name             String
+  category         String
+  description      String?
+  templateContent  String    @map("template_content")
+  requiredFields   Json      @map("required_fields")
+  optionalFields   Json?     @map("optional_fields")
+  price            Decimal   @default(0)
+  complexityLevel  String    @default("medium") @map("complexity_level")
+  estimatedTime    String?   @map("estimated_time")
+  legalCategory    String?   @map("legal_category")
+  applicableStates Json?     @map("applicable_states")
+  isActive         Boolean   @default(true) @map("is_active")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  
+  documents        GeneratedDocument[]
+
+  @@map("document_templates")
+}
+
+model GeneratedDocument {
+  id            String    @id @default(uuid())
+  companyId     String    @map("company_id")
+  templateId    String?   @map("template_id")
+  documentName  String    @map("document_name")
+  documentType  String?   @map("document_type")
+  content       String?
+  filledData    Json?     @map("filled_data")
+  status        String    @default("draft")
+  fileUrl       String?   @map("file_url")
+  downloadCount Int       @default(0) @map("download_count")
+  version       Int       @default(1)
+  generatedAt   DateTime  @default(now()) @map("generated_at")
+  lastModified  DateTime  @updatedAt @map("last_modified")
+  
+  company       Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  template      DocumentTemplate? @relation(fields: [templateId], references: [id])
+
+  @@map("generated_documents")
+}
+
+model ComplianceTask {
+  id                String    @id @default(uuid())
+  companyId         String    @map("company_id")
+  taskName          String    @map("task_name")
+  description       String?
+  taskType          String    @map("task_type")
+  dueDate           DateTime  @map("due_date") @db.Date
+  priority          String    @default("medium")
+  status            String    @default("pending")
+  recurring         Boolean   @default(false)
+  recurringInterval String?   @map("recurring_interval")
+  reminderSent      Boolean   @default(false) @map("reminder_sent")
+  completionDate    DateTime? @map("completion_date") @db.Date
+  notes             String?
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  
+  company           Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("compliance_tasks")
+}
+
+model Payment {
+  id               String       @id @default(uuid())
+  companyId        String       @map("company_id")
+  subscriptionId   String?      @map("subscription_id")
+  razorpayPaymentId String?     @unique @map("razorpay_payment_id")
+  razorpayOrderId  String?      @map("razorpay_order_id")
+  amount           Decimal
+  currency         String       @default("INR")
+  status           String
+  paymentMethod    String?      @map("payment_method")
+  description      String?
+  createdAt        DateTime     @default(now()) @map("created_at")
+  
+  company          Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  subscription     Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  @@map("payments")
+}
+
+model UserSession {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  sessionToken String   @unique @map("session_token")
+  expires      DateTime
+  createdAt    DateTime @default(now()) @map("created_at")
+  
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_sessions")
+}
+
+model AiInteraction {
+  id              String   @id @default(uuid())
+  companyId       String   @map("company_id")
+  interactionType String   @map("interaction_type")
+  userQuery       String?  @map("user_query")
+  aiResponse      String?  @map("ai_response")
+  tokensUsed      Int?     @map("tokens_used")
+  cost            Decimal?
+  createdAt       DateTime @default(now()) @map("created_at")
+  
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("ai_interactions")
+}
+
+model AuditLog {
+  id           String    @id @default(uuid())
+  userId       String?   @map("user_id")
+  companyId    String?   @map("company_id")
+  action       String
+  resourceType String?   @map("resource_type")
+  resourceId   String?   @map("resource_id")
+  oldValues    Json?     @map("old_values")
+  newValues    Json?     @map("new_values")
+  ipAddress    String?   @map("ip_address")
+  userAgent    String?   @map("user_agent")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  
+  user         User?     @relation(fields: [userId], references: [id])
+  company      Company?  @relation(fields: [companyId], references: [id])
+
+  @@map("audit_logs")
+}
