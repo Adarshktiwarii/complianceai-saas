@@ -12,4 +12,7 @@ if (process.env.NODE_ENV !== 'production') {
   globalThis.prisma = prisma;
 }
 
+// Export as 'db' for API routes
+export const db = prisma;
+
 export default prisma;

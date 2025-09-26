@@ -106,7 +106,7 @@ export default function DocumentGeneratorPage() {
             <div>
               <Label htmlFor="template">Select Template</Label>
               <Select
-                onValueChange={(value) => {
+                onValueChange={(value: string) => {
                   const template = templates.find(t => t.id === value);
                   setSelectedTemplate(template || null);
                   reset();
@@ -154,9 +154,9 @@ export default function DocumentGeneratorPage() {
                   {...register('documentName', { required: 'Document name is required' })}
                   placeholder="Enter document name"
                 />
-                {errors.documentName && (
-                  <p className="text-sm text-red-600 mt-1">{errors.documentName.message}</p>
-                )}
+                  {errors.documentName && (
+                    <p className="text-sm text-red-600 mt-1">{String(errors.documentName.message)}</p>
+                  )}
               </div>
 
               {/* Dynamic form fields based on template */}
@@ -197,7 +197,7 @@ export default function DocumentGeneratorPage() {
                     />
                   )}
                   {errors[fieldKey] && (
-                    <p className="text-sm text-red-600 mt-1">{errors[fieldKey].message}</p>
+                    <p className="text-sm text-red-600 mt-1">{String(errors[fieldKey].message)}</p>
                   )}
                 </div>
               ))}
@@ -236,7 +236,7 @@ export default function DocumentGeneratorPage() {
             <div className="bg-gray-50 p-4 rounded-lg">
               <h4 className="font-medium mb-2">{generatedDoc.documentName}</h4>
               <p className="text-sm text-gray-600">
-                Generated on {new Date(generatedDoc.generatedAt).toLocaleDateString())}
+                Generated on {new Date(generatedDoc.generatedAt).toLocaleDateString()}
               </p>
               <div className="mt-4 max-h-60 overflow-y-auto text-sm">
                 <pre className="whitespace-pre-wrap">{generatedDoc.content}</pre>

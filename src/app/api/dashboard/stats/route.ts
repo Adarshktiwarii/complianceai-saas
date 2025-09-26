@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
         upcomingDeadlines,
         recentActivity,
         company: {
-          name: company.name,
+          name: company.companyName,
           industry: company.industry,
         }
       }

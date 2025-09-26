@@ -1,5 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { NextRequest } from 'next/server';
+import { cookies } from 'next/headers';
 import { prisma } from './db';
 import { User } from '../types';
 
@@ -50,11 +52,35 @@ export async function getUserFromSession(sessionToken: string): Promise<User | n
     return null;
   }
   
-  return session.user;
+  return {
+    ...session.user,
+    phone: session.user.phone || undefined
+  };
 }
 
 export async function deleteUserSession(sessionToken: string): Promise<void> {
   await prisma.userSession.delete({
     where: { sessionToken }
   });
+}
+
+export async function verifySession(request: NextRequest): Promise<{ userId: string; user: User } | null> {
+  try {
+    const cookieStore = cookies();
+    const sessionToken = cookieStore.get('session-token')?.value;
+    
+    if (!sessionToken) {
+      return null;
+    }
+    
+    const user = await getUserFromSession(sessionToken);
+    if (!user) {
+      return null;
+    }
+    
+    return { userId: user.id, user };
+  } catch (error) {
+    console.error('Session verification error:', error);
+    return null;
+  }
 }

@@ -68,8 +68,8 @@ export async function POST(request: NextRequest) {
         templateId,
         documentName,
         documentType: 'legal',
-        content,
-        filledData: userInputs,
+        content: JSON.stringify(content),
+        filledData: JSON.stringify(userInputs),
         status: 'completed'
       }
     });

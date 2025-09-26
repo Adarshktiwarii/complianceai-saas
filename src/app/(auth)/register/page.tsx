@@ -72,9 +72,9 @@ export default function RegisterPage() {
                 {...register('name', { required: 'Name is required' })}
                 placeholder="Enter your full name"
               />
-              {errors.name && (
-                <p className="text-sm text-red-600 mt-1">{errors.name.message}</p>
-              )}
+                {errors.name && (
+                  <p className="text-sm text-red-600 mt-1">{String(errors.name.message)}</p>
+                )}
             </div>
             
             <div>
@@ -85,9 +85,9 @@ export default function RegisterPage() {
                 {...register('email', { required: 'Email is required' })}
                 placeholder="Enter your email"
               />
-              {errors.email && (
-                <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
-              )}
+                {errors.email && (
+                  <p className="text-sm text-red-600 mt-1">{String(errors.email.message)}</p>
+                )}
             </div>
             
             <div>
@@ -111,9 +111,9 @@ export default function RegisterPage() {
                 })}
                 placeholder="Create a password"
               />
-              {errors.password && (
-                <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>
-              )}
+                {errors.password && (
+                  <p className="text-sm text-red-600 mt-1">{String(errors.password.message)}</p>
+                )}
             </div>
             
             <Button type="submit" className="w-full" disabled={loading}>

@@ -73,9 +73,9 @@ export default function LoginPage() {
                 {...register('email', { required: 'Email is required' })}
                 placeholder="Enter your email"
               />
-              {errors.email && (
-                <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
-              )}
+                {errors.email && (
+                  <p className="text-sm text-red-600 mt-1">{String(errors.email.message)}</p>
+                )}
             </div>
             
             <div>
@@ -86,9 +86,9 @@ export default function LoginPage() {
                 {...register('password', { required: 'Password is required' })}
                 placeholder="Enter your password"
               />
-              {errors.password && (
-                <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>
-              )}
+                {errors.password && (
+                  <p className="text-sm text-red-600 mt-1">{String(errors.password.message)}</p>
+                )}
             </div>
             
             <Button type="submit" className="w-full" disabled={loading}>
