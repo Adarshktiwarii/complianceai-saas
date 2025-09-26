@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -30,7 +30,7 @@ model Company {
   companyName       String    @map("company_name")
   industry          String?
   companyType       String    @default("private_limited") @map("company_type")
-  incorporationDate DateTime? @map("incorporation_date") @db.Date
+  incorporationDate DateTime? @map("incorporation_date")
   cin               String?
   gstin             String?
   pan               String?
@@ -39,9 +39,9 @@ model Company {
   state             String?
   city              String?
   pincode           String?
-  authorizedCapital Decimal?  @map("authorized_capital")
-  paidUpCapital     Decimal?  @map("paid_up_capital")
-  directorDetails   Json?     @map("director_details")
+  authorizedCapital Float?
+  paidUpCapital     Float?    @map("paid_up_capital")
+  directorDetails   String?   @map("director_details")
   createdAt         DateTime  @default(now()) @map("created_at")
   updatedAt         DateTime  @updatedAt @map("updated_at")
   
@@ -65,7 +65,7 @@ model Subscription {
   currentPeriodEnd     DateTime  @map("current_period_end")
   razorpaySubscriptionId String? @map("razorpay_subscription_id")
   razorpayCustomerId   String?   @map("razorpay_customer_id")
-  monthlyPrice         Decimal   @map("monthly_price")
+  monthlyPrice         Float     @map("monthly_price")
   documentsUsed        Int       @default(0) @map("documents_used")
   documentsLimit       Int       @map("documents_limit")
   createdAt            DateTime  @default(now()) @map("created_at")
@@ -83,13 +83,13 @@ model DocumentTemplate {
   category         String
   description      String?
   templateContent  String    @map("template_content")
-  requiredFields   Json      @map("required_fields")
-  optionalFields   Json?     @map("optional_fields")
-  price            Decimal   @default(0)
+  requiredFields   String    @map("required_fields")
+  optionalFields   String?   @map("optional_fields")
+  price            Float     @default(0)
   complexityLevel  String    @default("medium") @map("complexity_level")
   estimatedTime    String?   @map("estimated_time")
   legalCategory    String?   @map("legal_category")
-  applicableStates Json?     @map("applicable_states")
+  applicableStates String?   @map("applicable_states")
   isActive         Boolean   @default(true) @map("is_active")
   createdAt        DateTime  @default(now()) @map("created_at")
   updatedAt        DateTime  @updatedAt @map("updated_at")
@@ -106,7 +106,7 @@ model GeneratedDocument {
   documentName  String    @map("document_name")
   documentType  String?   @map("document_type")
   content       String?
-  filledData    Json?     @map("filled_data")
+  filledData    String?   @map("filled_data")
   status        String    @default("draft")
   fileUrl       String?   @map("file_url")
   downloadCount Int       @default(0) @map("download_count")
@@ -126,13 +126,13 @@ model ComplianceTask {
   taskName          String    @map("task_name")
   description       String?
   taskType          String    @map("task_type")
-  dueDate           DateTime  @map("due_date") @db.Date
+  dueDate           DateTime  @map("due_date")
   priority          String    @default("medium")
   status            String    @default("pending")
   recurring         Boolean   @default(false)
   recurringInterval String?   @map("recurring_interval")
   reminderSent      Boolean   @default(false) @map("reminder_sent")
-  completionDate    DateTime? @map("completion_date") @db.Date
+  completionDate    DateTime? @map("completion_date")
   notes             String?
   createdAt         DateTime  @default(now()) @map("created_at")
   updatedAt         DateTime  @updatedAt @map("updated_at")
@@ -148,7 +148,7 @@ model Payment {
   subscriptionId   String?      @map("subscription_id")
   razorpayPaymentId String?     @unique @map("razorpay_payment_id")
   razorpayOrderId  String?      @map("razorpay_order_id")
-  amount           Decimal
+  amount           Float
   currency         String       @default("INR")
   status           String
   paymentMethod    String?      @map("payment_method")
@@ -180,7 +180,7 @@ model AiInteraction {
   userQuery       String?  @map("user_query")
   aiResponse      String?  @map("ai_response")
   tokensUsed      Int?     @map("tokens_used")
-  cost            Decimal?
+  cost            Float?
   createdAt       DateTime @default(now()) @map("created_at")
   
   company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
@@ -195,8 +195,8 @@ model AuditLog {
   action       String
   resourceType String?   @map("resource_type")
   resourceId   String?   @map("resource_id")
-  oldValues    Json?     @map("old_values")
-  newValues    Json?     @map("new_values")
+  oldValues    String?   @map("old_values")
+  newValues    String?   @map("new_values")
   ipAddress    String?   @map("ip_address")
   userAgent    String?   @map("user_agent")
   createdAt    DateTime  @default(now()) @map("created_at")

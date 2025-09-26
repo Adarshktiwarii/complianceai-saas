@@ -40,7 +40,7 @@ By: _________________          _________________
 Name: {signatoryName}           Employee Signature
 Title: {signatoryTitle}
 Date: _______________          Date: ___________`,
-      requiredFields: {
+      requiredFields: JSON.stringify({
         employeeName: { label: "Employee Name", type: "text", required: true },
         employeeAddress: { label: "Employee Address", type: "textarea", required: true },
         designation: { label: "Designation", type: "text", required: true },
@@ -49,7 +49,7 @@ Date: _______________          Date: ___________`,
         noticePeriod: { label: "Notice Period (days)", type: "number", required: true, default: 30 },
         signatoryName: { label: "Company Signatory Name", type: "text", required: true },
         signatoryTitle: { label: "Signatory Title", type: "text", required: true }
-      },
+      }),
       price: 999,
       complexityLevel: 'medium',
       estimatedTime: '10-15 minutes',
@@ -92,7 +92,7 @@ By: _________________          _________________
 Name: {signatoryName}           Recipient Signature  
 Title: {signatoryTitle}
 Date: _______________          Date: ___________`,
-      requiredFields: {
+      requiredFields: JSON.stringify({
         recipientName: { label: "Recipient Name", type: "text", required: true },
         recipientAddress: { label: "Recipient Address", type: "textarea", required: true },
         purpose: { label: "Purpose of Disclosure", type: "textarea", required: true },
@@ -100,67 +100,10 @@ Date: _______________          Date: ___________`,
         jurisdiction: { label: "Jurisdiction", type: "text", required: true, default: "Delhi" },
         signatoryName: { label: "Company Signatory Name", type: "text", required: true },
         signatoryTitle: { label: "Signatory Title", type: "text", required: true }
-      },
+      }),
       price: 799,
       complexityLevel: 'simple',
       estimatedTime: '5-10 minutes',
-      legalCategory: 'Contract Law'
-    },
-    {
-      id: '550e8400-e29b-41d4-a716-446655440003',
-      name: 'Service Agreement',
-      category: 'Business Contracts',
-      description: 'Professional service agreement template',
-      templateContent: `SERVICE AGREEMENT
-
-This Service Agreement is entered into on {date} between {companyName} ("Service Provider") and {clientName} ("Client").
-
-1. SERVICES
-Service Provider agrees to provide the following services: {serviceDescription}
-
-2. TERM
-This Agreement shall commence on {startDate} and continue until {endDate}.
-
-3. COMPENSATION
-Client agrees to pay INR {totalAmount} for the services, payable as follows: {paymentTerms}
-
-4. DELIVERABLES
-{deliverables}
-
-5. INTELLECTUAL PROPERTY
-All work products created under this Agreement shall belong to {ipOwner}.
-
-6. TERMINATION
-Either party may terminate with {terminationNotice} days written notice.
-
-IN WITNESS WHEREOF, the parties execute this Agreement.
-
-{companyName}                    {clientName}
-_________________                _________________
-Authorized Signatory             Client Signature`,
-      requiredFields: {
-        clientName: { label: "Client Name", type: "text", required: true },
-        serviceDescription: { label: "Service Description", type: "textarea", required: true },
-        startDate: { label: "Start Date", type: "date", required: true },
-        endDate: { label: "End Date", type: "date", required: true },
-        totalAmount: { label: "Total Amount (INR)", type: "number", required: true },
-        paymentTerms: { label: "Payment Terms", type: "textarea", required: true },
-        deliverables: { label: "Deliverables", type: "textarea", required: true },
-        ipOwner: { 
-          label: "IP Owner", 
-          type: "select", 
-          options: [
-            { value: "Service Provider", label: "Service Provider" },
-            { value: "Client", label: "Client" },
-            { value: "Shared", label: "Shared" }
-          ], 
-          required: true 
-        },
-        terminationNotice: { label: "Termination Notice (days)", type: "number", required: true, default: 15 }
-      },
-      price: 1299,
-      complexityLevel: 'medium',
-      estimatedTime: '15-20 minutes',
       legalCategory: 'Contract Law'
     }
   ];
