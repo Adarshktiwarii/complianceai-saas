@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { verifySession } from '@/lib/auth';
 import { db } from '@/lib/db';
 import OpenAI from 'openai';
 import { generateFreeAIResponse } from '@/lib/ai-free';
@@ -12,7 +12,7 @@ const openai = new OpenAI({
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const session = await auth();
+    const session = await verifySession(request);
     if (!session) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
@@ -189,10 +189,8 @@ INSTRUCTIONS:
   } catch (error) {
     console.error('AI Chat error:', error);
     
-    // Fallback response if OpenAI fails
-    const fallbackResponse = `I apologize, but I'm experiencing technical difficulties. Here's some general guidance:
-
-${getFallbackResponse(message)}
+    // Fallback response if any error occurs
+    const fallbackResponse = `I apologize, but I'm experiencing technical difficulties. Please try again later or contact support if the issue persists.
 
 Please note: This is general information and should not be considered as legal advice. Always consult with a qualified lawyer for specific legal matters.`;
 
