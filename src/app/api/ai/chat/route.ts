@@ -136,7 +136,7 @@ INSTRUCTIONS:
       tokensUsed,
       cost,
       usingFreeAPI,
-      source: usingFreeAPI ? 'free-api' : 'openai'
+      source: usingFreeAPI ? (response.includes('Perplexity') ? 'perplexity' : 'huggingface') : 'openai'
     });
 
   } catch (error) {

@@ -187,6 +187,8 @@ export default function LegalAssistantPage() {
                         <div className="mt-1">
                           <Badge variant="secondary" className="text-xs">
                             {message.source === 'openai' ? '🤖 OpenAI GPT-4' : 
+                             message.source === 'perplexity' ? '🔍 Perplexity AI' :
+                             message.source === 'huggingface' ? '🤗 Hugging Face' :
                              message.source === 'free-api' ? '🆓 Free AI' : 
                              '💬 AI Assistant'}
                           </Badge>

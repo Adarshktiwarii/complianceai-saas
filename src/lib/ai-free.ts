@@ -1,40 +1,97 @@
-// Free AI API integration using Hugging Face
-// This provides a free alternative to OpenAI for development
+// Free AI API integration using multiple sources
+// Perplexity API, Hugging Face, and fallback responses
 
 export interface FreeAIResponse {
   response: string;
   suggestions: string[];
-  source: 'huggingface' | 'fallback';
+  source: 'perplexity' | 'huggingface' | 'fallback';
 }
 
 export async function generateFreeAIResponse(message: string): Promise<FreeAIResponse> {
-  try {
-    // Try Hugging Face API first (free)
-    const response = await fetch('https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.HUGGINGFACE_API_KEY || 'hf_your_token_here'}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        inputs: message,
-        parameters: {
-          max_length: 500,
-          temperature: 0.7,
-          do_sample: true
-        }
-      })
-    });
+  // Try Perplexity API first (free tier available)
+  if (process.env.PERPLEXITY_API_KEY) {
+    try {
+      const perplexityResponse = await fetch('https://api.perplexity.ai/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'llama-3.1-sonar-small-128k-online',
+          messages: [
+            {
+              role: 'system',
+              content: 'You are ComplianceAI, an expert legal assistant specialized in Indian corporate law, startup compliance, and business legal requirements. Provide accurate, helpful advice while noting that users should consult with qualified lawyers for specific legal matters.'
+            },
+            {
+              role: 'user',
+              content: message
+            }
+          ],
+          max_tokens: 1000,
+          temperature: 0.7
+        })
+      });
 
-    if (response.ok) {
-      const data = await response.json();
-      const aiResponse = data[0]?.generated_text || data.generated_text || 'I understand your question. Let me help you with that.';
-      
-      return {
-        response: formatLegalResponse(aiResponse, message),
-        suggestions: generateSuggestions(message),
-        source: 'huggingface'
-      };
+      if (perplexityResponse.ok) {
+        const data = await perplexityResponse.json();
+        const aiResponse = data.choices[0]?.message?.content || 'I understand your question. Let me help you with that.';
+        
+        return {
+          response: formatLegalResponse(aiResponse, message),
+          suggestions: generateSuggestions(message),
+          source: 'perplexity'
+        };
+      }
+    } catch (error) {
+      console.error('Perplexity API error:', error);
+    }
+  }
+
+  // Try Hugging Face API with better models
+  try {
+    // Try multiple Hugging Face models for better responses
+    const models = [
+      'microsoft/DialoGPT-large',
+      'microsoft/DialoGPT-medium', 
+      'facebook/blenderbot-400M-distill',
+      'google/flan-t5-large'
+    ];
+
+    for (const model of models) {
+      try {
+        const response = await fetch(`https://api-inference.huggingface.co/models/${model}`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${process.env.HUGGINGFACE_API_KEY || 'hf_your_token_here'}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            inputs: message,
+            parameters: {
+              max_length: 500,
+              temperature: 0.7,
+              do_sample: true,
+              return_full_text: false
+            }
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const aiResponse = data[0]?.generated_text || data.generated_text || 'I understand your question. Let me help you with that.';
+          
+          return {
+            response: formatLegalResponse(aiResponse, message),
+            suggestions: generateSuggestions(message),
+            source: 'huggingface'
+          };
+        }
+      } catch (modelError) {
+        console.error(`Hugging Face model ${model} error:`, modelError);
+        continue; // Try next model
+      }
     }
   } catch (error) {
     console.error('Hugging Face API error:', error);
