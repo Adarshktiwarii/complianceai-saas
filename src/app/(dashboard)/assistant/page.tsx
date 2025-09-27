@@ -128,8 +128,8 @@ export default function LegalAssistantPage() {
     setMessages(prev => [...prev, userMessage]);
 
     try {
-      // Call real AI API
-      const response = await fetch('/api/ai/chat', {
+      // Call AI API (using test endpoint for now)
+      const response = await fetch('/api/ai/test', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

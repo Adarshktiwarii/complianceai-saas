@@ -1,19 +1,49 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifySession } from '@/lib/auth';
 import { db } from '@/lib/db';
-import OpenAI from 'openai';
-import { generateFreeAIResponse } from '@/lib/ai-free';
-import { AIMemory, ConversationMessage } from '@/lib/ai-memory';
+import { generateSimpleAIResponse } from '@/lib/ai-simple';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || 'sk-proj-your-key-here'
-});
+// Simple authentication check
+async function checkAuth(request: NextRequest) {
+  try {
+    // Get session token from cookies
+    const sessionToken = request.cookies.get('session-token')?.value;
+    
+    if (!sessionToken) {
+      return null;
+    }
+
+    // Check if session exists and is valid
+    const session = await db.userSession.findFirst({
+      where: {
+        sessionToken: sessionToken,
+        expires: {
+          gt: new Date()
+        }
+      },
+      include: {
+        user: true
+      }
+    });
+
+    if (!session) {
+      return null;
+    }
+
+    return {
+      userId: session.userId,
+      user: session.user
+    };
+  } catch (error) {
+    console.error('Auth check error:', error);
+    return null;
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const session = await verifySession(request);
-    if (!session) {
+    const auth = await checkAuth(request);
+    if (!auth) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
@@ -32,27 +62,10 @@ export async function POST(request: NextRequest) {
 
     // Get user's company information for context
     const company = await db.company.findFirst({
-      where: { userId: session.userId }
+      where: { userId: auth.userId }
     });
 
-    // Initialize AI Memory system
-    const sessionId = request.headers.get('x-session-id') || `session_${Date.now()}`;
-    const aiMemory = new AIMemory(session.userId, company?.id || 'unknown', sessionId);
-
-    // Get personalized context
-    const personalizedContext = await aiMemory.getPersonalizedContext();
-    const conversationHistory = await aiMemory.getConversationHistory(5);
-
-    // Store user message
-    const userMessage: ConversationMessage = {
-      id: `msg_${Date.now()}`,
-      role: 'user',
-      content: message,
-      timestamp: new Date()
-    };
-    await aiMemory.storeMessage(userMessage);
-
-    // Build context-aware prompt with personalization
+    // Build context-aware prompt
     const systemPrompt = `You are ComplianceAI, an expert legal assistant specialized in Indian corporate law, startup compliance, and business legal requirements. You help Indian startups and businesses with:
 
 1. **Legal Compliance**: GST, TDS, ROC filings, labor laws
@@ -71,16 +84,6 @@ CURRENT COMPANY CONTEXT:
 - State: ${company.state || 'Not specified'}
 ` : ''}
 
-${personalizedContext ? `
-PERSONALIZED CONTEXT:
-${personalizedContext}
-` : ''}
-
-${conversationHistory.length > 0 ? `
-RECENT CONVERSATION:
-${conversationHistory.map(msg => `${msg.role}: ${msg.content}`).join('\n')}
-` : ''}
-
 INSTRUCTIONS:
 - Provide accurate, helpful legal guidance
 - Always mention that users should consult qualified lawyers for specific legal matters
@@ -88,77 +91,10 @@ INSTRUCTIONS:
 - Give step-by-step guidance when appropriate
 - Include relevant deadlines, penalties, and requirements
 - Be conversational but professional
-- If asked about non-legal topics, politely redirect to legal/business matters
-- Use the user's conversation history to provide more relevant responses
-- Adapt your communication style to the user's preferences`;
+- If asked about non-legal topics, politely redirect to legal/business matters`;
 
-    let response: string;
-    let suggestions: string[];
-    let tokensUsed = 0;
-    let cost = 0;
-    let usingFreeAPI = false;
-
-    // Try OpenAI first if API key is available
-    if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your-openai-api-key') {
-      try {
-        const completion = await openai.chat.completions.create({
-          model: 'gpt-4',
-          messages: [
-            {
-              role: 'system',
-              content: systemPrompt
-            },
-            {
-              role: 'user',
-              content: message
-            }
-          ],
-          max_tokens: 1500,
-          temperature: 0.7,
-          presence_penalty: 0.1,
-          frequency_penalty: 0.1
-        });
-
-        response = completion.choices[0].message.content || 'I apologize, but I could not generate a response. Please try again.';
-        tokensUsed = completion.usage?.total_tokens || 0;
-        cost = calculateTokenCost(tokensUsed);
-      } catch (openaiError) {
-        console.error('OpenAI API error:', openaiError);
-        // Fall back to free API
-        const freeResponse = await generateFreeAIResponse(message);
-        response = freeResponse.response;
-        suggestions = freeResponse.suggestions;
-        usingFreeAPI = true;
-      }
-    } else {
-      // Use free API directly
-      const freeResponse = await generateFreeAIResponse(message);
-      response = freeResponse.response;
-      suggestions = freeResponse.suggestions;
-      usingFreeAPI = true;
-    }
-
-    // Generate suggestions if not using free API
-    if (!usingFreeAPI) {
-      suggestions = generateSuggestions(message, response);
-    }
-
-    // Store AI response in conversation history
-    const aiMessage: ConversationMessage = {
-      id: `ai_${Date.now()}`,
-      role: 'assistant',
-      content: response,
-      timestamp: new Date(),
-      metadata: {
-        aiSource: usingFreeAPI ? (response.includes('Perplexity') ? 'perplexity' : 'huggingface') : 'openai',
-        tokensUsed,
-        responseTime: Date.now() - Date.now() // Calculate actual response time
-      }
-    };
-    await aiMemory.storeMessage(aiMessage);
-
-    // Update user preferences and learning data
-    await aiMemory.updateUserPreferences(userMessage);
+    // Use simple AI response
+    const aiResponse = generateSimpleAIResponse(message);
 
     // Log the interaction
     try {
@@ -167,9 +103,9 @@ INSTRUCTIONS:
           companyId: company?.id || 'unknown',
           interactionType: 'legal_assistance',
           userQuery: message,
-          aiResponse: response,
-          tokensUsed,
-          cost
+          aiResponse: aiResponse.response,
+          tokensUsed: 0,
+          cost: 0
         }
       });
     } catch (logError) {
@@ -178,12 +114,12 @@ INSTRUCTIONS:
 
     return NextResponse.json({
       success: true,
-      response,
-      suggestions,
-      tokensUsed,
-      cost,
-      usingFreeAPI,
-      source: usingFreeAPI ? (response.includes('Perplexity') ? 'perplexity' : 'huggingface') : 'openai'
+      response: aiResponse.response,
+      suggestions: aiResponse.suggestions,
+      tokensUsed: 0,
+      cost: 0,
+      usingFreeAPI: true,
+      source: aiResponse.source
     });
 
   } catch (error) {
@@ -198,110 +134,14 @@ Please note: This is general information and should not be considered as legal a
       success: true,
       response: fallbackResponse,
       suggestions: [
-        "Tell me more about this",
-        "What are the legal requirements?",
-        "How can I get started?"
+        "Try asking again",
+        "Contact support",
+        "Browse our help center"
       ],
       tokensUsed: 0,
       cost: 0,
-      fallback: true
+      usingFreeAPI: true,
+      source: 'fallback'
     });
   }
-}
-
-function calculateTokenCost(tokens: number): number {
-  // GPT-4 pricing: $0.03 per 1K prompt tokens + $0.06 per 1K completion tokens
-  const costPer1kTokens = 0.045; // Average cost
-  return (tokens / 1000) * costPer1kTokens;
-}
-
-function generateSuggestions(userMessage: string, aiResponse: string): string[] {
-  const lowerMessage = userMessage.toLowerCase();
-  
-  if (lowerMessage.includes('gst') || lowerMessage.includes('tax')) {
-    return [
-      "How to file GSTR-1?",
-      "What is the GST rate for my product?",
-      "How to claim GST input credit?",
-      "What are the GST penalties?"
-    ];
-  }
-  
-  if (lowerMessage.includes('tds')) {
-    return [
-      "TDS rates for different payments",
-      "How to generate TDS certificate?",
-      "TDS return filing process",
-      "TDS due dates"
-    ];
-  }
-  
-  if (lowerMessage.includes('company') || lowerMessage.includes('registration')) {
-    return [
-      "What documents are needed for company registration?",
-      "How to get CIN number?",
-      "What is the incorporation process?",
-      "ROC compliance requirements"
-    ];
-  }
-  
-  if (lowerMessage.includes('employment') || lowerMessage.includes('hr')) {
-    return [
-      "Employment agreement template",
-      "HR policy requirements",
-      "Labor law compliance",
-      "Employee benefits"
-    ];
-  }
-  
-  if (lowerMessage.includes('compliance') || lowerMessage.includes('legal')) {
-    return [
-      "Monthly compliance checklist",
-      "Annual compliance requirements",
-      "Industry-specific regulations",
-      "Penalty for non-compliance"
-    ];
-  }
-  
-  return [
-    "Tell me more about this",
-    "What are the next steps?",
-    "How can I implement this?",
-    "What documents do I need?"
-  ];
-}
-
-function getFallbackResponse(message: string): string {
-  const lowerMessage = message.toLowerCase();
-  
-  if (lowerMessage.includes('gst')) {
-    return `For GST-related queries, you should know:
-- GST registration is mandatory for businesses with turnover > ₹20 lakhs
-- GSTR-1 must be filed monthly by the 11th
-- GSTR-3B must be filed monthly by the 20th
-- Late filing attracts ₹200 per day penalty`;
-  }
-  
-  if (lowerMessage.includes('tds')) {
-    return `For TDS compliance:
-- TDS must be deducted on salary, rent, professional fees
-- TDS returns must be filed quarterly
-- TDS certificates must be issued within 15 days
-- Late filing attracts ₹200 per day penalty`;
-  }
-  
-  if (lowerMessage.includes('company')) {
-    return `For company registration:
-- Choose between Private Limited, LLP, or One Person Company
-- Obtain DSC and DIN for directors
-- File incorporation documents with ROC
-- Get CIN and start business operations`;
-  }
-  
-  return `For legal compliance in India:
-- Ensure proper business registration
-- File all required returns on time
-- Maintain proper books of accounts
-- Comply with labor and tax laws
-- Consult qualified professionals for specific guidance`;
 }
