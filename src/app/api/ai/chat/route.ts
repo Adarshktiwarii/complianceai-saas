@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import OpenAI from 'openai';
 import { generateFreeAIResponse } from '@/lib/ai-free';
+import { AIMemory, ConversationMessage } from '@/lib/ai-memory';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || 'sk-proj-your-key-here'
@@ -34,7 +35,24 @@ export async function POST(request: NextRequest) {
       where: { userId: session.userId }
     });
 
-    // Build context-aware prompt
+    // Initialize AI Memory system
+    const sessionId = request.headers.get('x-session-id') || `session_${Date.now()}`;
+    const aiMemory = new AIMemory(session.userId, company?.id || 'unknown', sessionId);
+
+    // Get personalized context
+    const personalizedContext = await aiMemory.getPersonalizedContext();
+    const conversationHistory = await aiMemory.getConversationHistory(5);
+
+    // Store user message
+    const userMessage: ConversationMessage = {
+      id: `msg_${Date.now()}`,
+      role: 'user',
+      content: message,
+      timestamp: new Date()
+    };
+    await aiMemory.storeMessage(userMessage);
+
+    // Build context-aware prompt with personalization
     const systemPrompt = `You are ComplianceAI, an expert legal assistant specialized in Indian corporate law, startup compliance, and business legal requirements. You help Indian startups and businesses with:
 
 1. **Legal Compliance**: GST, TDS, ROC filings, labor laws
@@ -53,6 +71,16 @@ CURRENT COMPANY CONTEXT:
 - State: ${company.state || 'Not specified'}
 ` : ''}
 
+${personalizedContext ? `
+PERSONALIZED CONTEXT:
+${personalizedContext}
+` : ''}
+
+${conversationHistory.length > 0 ? `
+RECENT CONVERSATION:
+${conversationHistory.map(msg => `${msg.role}: ${msg.content}`).join('\n')}
+` : ''}
+
 INSTRUCTIONS:
 - Provide accurate, helpful legal guidance
 - Always mention that users should consult qualified lawyers for specific legal matters
@@ -60,7 +88,9 @@ INSTRUCTIONS:
 - Give step-by-step guidance when appropriate
 - Include relevant deadlines, penalties, and requirements
 - Be conversational but professional
-- If asked about non-legal topics, politely redirect to legal/business matters`;
+- If asked about non-legal topics, politely redirect to legal/business matters
+- Use the user's conversation history to provide more relevant responses
+- Adapt your communication style to the user's preferences`;
 
     let response: string;
     let suggestions: string[];
@@ -112,6 +142,23 @@ INSTRUCTIONS:
     if (!usingFreeAPI) {
       suggestions = generateSuggestions(message, response);
     }
+
+    // Store AI response in conversation history
+    const aiMessage: ConversationMessage = {
+      id: `ai_${Date.now()}`,
+      role: 'assistant',
+      content: response,
+      timestamp: new Date(),
+      metadata: {
+        aiSource: usingFreeAPI ? (response.includes('Perplexity') ? 'perplexity' : 'huggingface') : 'openai',
+        tokensUsed,
+        responseTime: Date.now() - Date.now() // Calculate actual response time
+      }
+    };
+    await aiMemory.storeMessage(aiMessage);
+
+    // Update user preferences and learning data
+    await aiMemory.updateUserPreferences(userMessage);
 
     // Log the interaction
     try {

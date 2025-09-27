@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Bot, Send, FileText, AlertCircle, CheckCircle, Clock, Lightbulb } from 'lucide-react';
+import { Bot, Send, FileText, AlertCircle, CheckCircle, Clock, Lightbulb, Brain, History, Settings } from 'lucide-react';
+import Link from 'next/link';
 
 interface ChatMessage {
   id: string;
@@ -34,6 +35,25 @@ export default function LegalAssistantPage() {
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [sessionId] = useState(`session_${Date.now()}`);
+  const [personalizedSuggestions, setPersonalizedSuggestions] = useState<string[]>([]);
+
+  // Load personalized suggestions on component mount
+  useEffect(() => {
+    loadPersonalizedSuggestions();
+  }, []);
+
+  const loadPersonalizedSuggestions = async () => {
+    try {
+      const response = await fetch('/api/ai/insights');
+      if (response.ok) {
+        const data = await response.json();
+        setPersonalizedSuggestions(data.insights?.personalizedSuggestions || []);
+      }
+    } catch (error) {
+      console.error('Failed to load personalized suggestions:', error);
+    }
+  };
 
   const quickQuestions = [
     {
@@ -89,11 +109,13 @@ export default function LegalAssistantPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-Session-ID': sessionId
         },
         body: JSON.stringify({
           message: currentMessage,
           context: {
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            sessionId: sessionId
           }
         })
       });

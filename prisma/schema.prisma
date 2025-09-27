@@ -20,6 +20,8 @@ model User {
   companies     Company[]
   sessions      UserSession[]
   auditLogs     AuditLog[]
+  conversationMessages ConversationMessage[]
+  aiLearningData AiLearningData?
 
   @@map("users")
 }
@@ -52,6 +54,8 @@ model Company {
   payments          Payment[]
   aiInteractions    AiInteraction[]
   auditLogs         AuditLog[]
+  conversationMessages ConversationMessage[]
+  aiLearningData    AiLearningData[]
 
   @@map("companies")
 }
@@ -205,4 +209,42 @@ model AuditLog {
   company      Company?  @relation(fields: [companyId], references: [id])
 
   @@map("audit_logs")
+}
+
+model ConversationMessage {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  companyId   String    @map("company_id")
+  sessionId   String    @map("session_id")
+  role        String
+  content     String
+  timestamp   DateTime  @default(now())
+  metadata    String?   // JSON string for additional data
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("conversation_messages")
+}
+
+model AiLearningData {
+  id                      String    @id @default(uuid())
+  userId                  String    @unique @map("user_id")
+  companyId               String    @map("company_id")
+  frequentQuestions       String    @map("frequent_questions") // JSON string
+  preferredTopics         String    @map("preferred_topics") // JSON string
+  personalizedSuggestions String    @map("personalized_suggestions") // JSON string
+  averageSessionLength    Int       @default(0) @map("average_session_length")
+  preferredResponseLength String    @default("medium") @map("preferred_response_length")
+  mostActiveHours        String    @map("most_active_hours") // JSON string
+  commonPainPoints        String    @map("common_pain_points") // JSON string
+  customTemplates         String    @map("custom_templates") // JSON string
+  lastInteraction        DateTime? @map("last_interaction")
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime  @updatedAt @map("updated_at")
+  
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company                 Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("ai_learning_data")
 }
