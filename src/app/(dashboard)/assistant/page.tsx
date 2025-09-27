@@ -14,6 +14,7 @@ interface ChatMessage {
   content: string;
   timestamp: Date;
   suggestions?: string[];
+  source?: string;
 }
 
 export default function LegalAssistantPage() {
@@ -78,205 +79,72 @@ export default function LegalAssistantPage() {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const currentMessage = inputMessage;
     setInputMessage('');
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Call real AI API
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: currentMessage,
+          context: {
+            timestamp: new Date().toISOString()
+          }
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        const aiResponse: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          type: 'assistant',
+          content: data.response,
+          timestamp: new Date(),
+          suggestions: data.suggestions || [],
+          source: data.source || 'api'
+        };
+        setMessages(prev => [...prev, aiResponse]);
+      } else {
+        // Fallback response
+        const aiResponse: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          type: 'assistant',
+          content: "I apologize, but I'm having trouble connecting to the AI service. Please try again in a moment.",
+          timestamp: new Date(),
+          suggestions: [
+            "Try asking again",
+            "What can you help me with?",
+            "Tell me about legal compliance"
+          ]
+        };
+        setMessages(prev => [...prev, aiResponse]);
+      }
+    } catch (error) {
+      console.error('AI Chat error:', error);
       const aiResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'assistant',
-        content: generateAIResponse(inputMessage),
+        content: "I'm experiencing technical difficulties. Please try again later or contact support if the issue persists.",
         timestamp: new Date(),
-        suggestions: getSuggestions(inputMessage)
+        suggestions: [
+          "Try again",
+          "Contact support",
+          "Browse our help center"
+        ]
       };
       setMessages(prev => [...prev, aiResponse]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
-  const generateAIResponse = (question: string): string => {
-    const lowerQuestion = question.toLowerCase();
-    
-    if (lowerQuestion.includes('gst') && lowerQuestion.includes('registration')) {
-      return `For GST registration in India, you need the following documents:
-
-**Required Documents:**
-• PAN Card of the business
-• Aadhaar Card of the authorized signatory
-• Proof of business registration (Certificate of Incorporation)
-• Bank account details
-• Business address proof
-• Digital signature certificate
-• Photographs of authorized signatory
-
-**Additional Documents:**
-• Partnership deed (for partnership firms)
-• Memorandum of Association (for companies)
-• Articles of Association (for companies)
-
-The registration process typically takes 3-7 working days. Would you like me to help you with the specific registration process for your business type?`;
-    }
-    
-    if (lowerQuestion.includes('tds') && lowerQuestion.includes('return')) {
-      return `TDS (Tax Deducted at Source) returns must be filed quarterly. Here's what you need to know:
-
-**Filing Deadlines:**
-• Q1 (April-June): July 31st
-• Q2 (July-September): October 31st  
-• Q3 (October-December): January 31st
-• Q4 (January-March): May 31st
-
-**Required Forms:**
-• Form 24Q: For salary payments
-• Form 26Q: For non-salary payments
-• Form 27Q: For payments to non-residents
-
-**Penalties for Late Filing:**
-• ₹200 per day of delay
-• Interest on late payment: 1.5% per month
-
-Would you like me to help you prepare the TDS return for your specific case?`;
-    }
-    
-    if (lowerQuestion.includes('compliance') && lowerQuestion.includes('startup')) {
-      return `Here are the key compliance requirements for Indian startups:
-
-**Monthly Compliance:**
-• TDS returns (if applicable)
-• Professional tax (state-wise)
-• ESI and PF returns (if employees > 20)
-
-**Quarterly Compliance:**
-• GST returns (GSTR-1, GSTR-3B)
-• TDS returns
-• ROC compliance (for companies)
-
-**Annual Compliance:**
-• Income tax returns
-• Annual ROC filings
-• Audit reports (if turnover > ₹1 crore)
-• AGM (Annual General Meeting)
-
-**Startup-Specific Benefits:**
-• 3-year tax holiday (if eligible)
-• Fast-track patent examination
-• Self-certification for labor laws
-
-Would you like me to create a compliance calendar for your startup?`;
-    }
-    
-    if (lowerQuestion.includes('employment') && lowerQuestion.includes('agreement')) {
-      return `I can help you generate an employment agreement. Here's what should be included:
-
-**Essential Clauses:**
-• Job title and description
-• Salary and benefits
-• Working hours and location
-• Probation period
-• Notice period for termination
-• Confidentiality and non-compete clauses
-• Intellectual property rights
-• Dispute resolution mechanism
-
-**Legal Requirements:**
-• Minimum wage compliance
-• Statutory benefits (PF, ESI, etc.)
-• Leave entitlements
-• Termination procedures
-
-Would you like me to generate a customized employment agreement for your specific requirements?`;
-    }
-    
-    if (lowerQuestion.includes('penalty') && lowerQuestion.includes('gst')) {
-      return `GST late filing penalties are as follows:
-
-**Late Fee Structure:**
-• ₹200 per day (₹100 for CGST + ₹100 for SGST)
-• Maximum penalty: ₹10,000 per return
-• Interest: 18% per annum on tax amount
-
-**Interest Calculation:**
-• From due date to actual payment date
-• On the tax amount due
-• Compounded monthly
-
-**Relief Available:**
-• Amnesty schemes (periodic)
-• Waiver of late fees (conditional)
-• Reduced penalties for first-time defaulters
-
-**Best Practices:**
-• Set up automated reminders
-• Use GST software for filing
-• Maintain proper documentation
-
-Would you like me to help you calculate the exact penalty for your case?`;
-    }
-    
-    if (lowerQuestion.includes('register') && lowerQuestion.includes('company')) {
-      return `Company registration in India involves several steps:
-
-**Types of Companies:**
-• Private Limited Company (most popular for startups)
-• Public Limited Company
-• One Person Company (OPC)
-• Limited Liability Partnership (LLP)
-
-**Registration Process:**
-1. **Name Approval:** Check name availability on MCA portal
-2. **Digital Signature:** Obtain DSC for directors
-3. **Director Identification Number:** Apply for DIN
-4. **Incorporation Documents:** Prepare MOA, AOA, etc.
-5. **Filing:** Submit forms with ROC
-6. **Certificate:** Receive Certificate of Incorporation
-
-**Required Documents:**
-• PAN and Aadhaar of directors
-• Address proof of registered office
-• MOA and AOA
-• Declaration by subscribers
-
-**Timeline:** 7-15 days (if all documents are correct)
-
-Would you like me to guide you through the specific registration process for your business type?`;
-    }
-    
-    return `I understand you're asking about "${question}". As your AI Legal Assistant, I can help you with:
-
-• **Document Generation:** Employment agreements, NDAs, contracts
-• **Compliance Guidance:** GST, TDS, ROC filings
-• **Legal Advice:** Indian business law, startup regulations
-• **Risk Assessment:** Legal risks and mitigation strategies
-
-Could you please provide more specific details about your legal question? I'll give you a comprehensive answer tailored to your situation.`;
-  };
-
-  const getSuggestions = (question: string): string[] => {
-    const lowerQuestion = question.toLowerCase();
-    
-    if (lowerQuestion.includes('gst')) {
-      return [
-        "How to file GSTR-1?",
-        "What is the GST rate for my product?",
-        "How to claim GST input credit?"
-      ];
-    }
-    
-    if (lowerQuestion.includes('tds')) {
-      return [
-        "TDS rates for different payments",
-        "How to generate TDS certificate?",
-        "TDS return filing process"
-      ];
-    }
-    
-    return [
-      "Tell me more about this",
-      "What are the legal requirements?",
-      "Generate a document for this"
-    ];
-  };
+  // Removed mock functions - now using real AI API
 
   const handleQuickQuestion = (question: string) => {
     setInputMessage(question);
@@ -315,6 +183,15 @@ Could you please provide more specific details about your legal question? I'll g
                       }`}
                     >
                       <p className="text-sm">{message.content}</p>
+                      {message.source && (
+                        <div className="mt-1">
+                          <Badge variant="secondary" className="text-xs">
+                            {message.source === 'openai' ? '🤖 OpenAI GPT-4' : 
+                             message.source === 'free-api' ? '🆓 Free AI' : 
+                             '💬 AI Assistant'}
+                          </Badge>
+                        </div>
+                      )}
                       {message.suggestions && message.suggestions.length > 0 && (
                         <div className="mt-2 space-y-1">
                           {message.suggestions.map((suggestion, index) => (
