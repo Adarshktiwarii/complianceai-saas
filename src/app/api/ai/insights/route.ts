@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { verifySession } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { AIMemory } from '@/lib/ai-memory';
 
 export async function GET(request: NextRequest) {
   try {
     // Check authentication
-    const session = await auth();
+    const session = await verifySession(request);
     if (!session) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     // Check authentication
-    const session = await auth();
+    const session = await verifySession(request);
     if (!session) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Bot, Send, FileText, AlertCircle, CheckCircle, Clock, Lightbulb, Brain, History, Settings } from 'lucide-react';
+import { Bot, Send, FileText, AlertCircle, CheckCircle, Clock, Lightbulb, Brain, History, Settings, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
 
 interface ChatMessage {
@@ -259,6 +259,16 @@ export default function LegalAssistantPage() {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* AI Insights Link */}
+        <div className="mb-6">
+          <Link href="/assistant/insights">
+            <Button variant="outline" className="w-full">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              View AI Learning Insights
+            </Button>
+          </Link>
         </div>
 
         {/* Quick Questions & Features */}

@@ -13,7 +13,8 @@ import {
   CreditCard,
   LogOut,
   Building,
-  Bot
+  Bot,
+  BarChart3
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -35,6 +36,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: 'Documents', href: '/documents', icon: FileText },
     { name: 'Compliance', href: '/compliance', icon: Calendar },
     { name: 'AI Assistant', href: '/assistant', icon: Bot },
+    { name: 'AI Insights', href: '/assistant/insights', icon: BarChart3 },
     { name: 'Subscription', href: '/subscription', icon: CreditCard },
     { name: 'Settings', href: '/settings', icon: Settings },
   ];
