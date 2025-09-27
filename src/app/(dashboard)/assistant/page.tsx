@@ -128,8 +128,8 @@ export default function LegalAssistantPage() {
     setMessages(prev => [...prev, userMessage]);
 
     try {
-      // Call AI API (using test endpoint for now)
-      const response = await fetch('/api/ai/test', {
+      // Call AI API (using simple endpoint)
+      const response = await fetch('/api/ai/chat-simple', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -203,9 +203,9 @@ export default function LegalAssistantPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 max-w-full">
           {/* Main Chat Area */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 min-w-0">
             <Card className="h-[600px] flex flex-col shadow-xl border-0 bg-white/80 backdrop-blur-sm">
               <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-t-lg">
                 <CardTitle className="flex items-center gap-3">
@@ -218,16 +218,16 @@ export default function LegalAssistantPage() {
                 </CardTitle>
               </CardHeader>
               
-              <CardContent className="flex-1 flex flex-col p-0">
+              <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                <div className="flex-1 overflow-y-auto p-6 space-y-4 max-w-full">
                   {messages.map((message) => (
                     <div
                       key={message.id}
                       className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
                       <div
-                        className={`max-w-[80%] p-4 rounded-2xl ${
+                        className={`max-w-[80%] p-4 rounded-2xl break-words ${
                           message.type === 'user'
                             ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
                             : 'bg-gray-100 text-gray-900 border'
@@ -304,7 +304,7 @@ export default function LegalAssistantPage() {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-6 min-w-0">
             {/* AI Insights Link */}
             <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200">
               <CardContent className="p-6">

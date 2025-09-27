@@ -73,6 +73,53 @@ export function generateSimpleAIResponse(message: string): SimpleAIResponse {
       "What is the penalty for late TDS filing?"
     ];
   }
+  // Startup India Recognition
+  else if (lowerMessage.includes('startup india recognition') || lowerMessage.includes('startup india')) {
+    response = `To get Startup India recognition, follow these steps:
+
+**Eligibility Criteria:**
+- Company must be incorporated as a Private Limited Company, Partnership firm, or LLP
+- Company should be less than 10 years old
+- Annual turnover should not exceed ₹100 crores in any financial year
+- Company should be working towards innovation, development, or improvement of products/processes
+
+**Registration Process:**
+1. Visit the Startup India portal (startupindia.gov.in)
+2. Create an account and login
+3. Fill the Startup India recognition form
+4. Upload required documents:
+   - Certificate of incorporation
+   - PAN card
+   - Board resolution
+   - Letter of recommendation (if applicable)
+5. Submit the application
+6. Receive recognition certificate
+
+**Benefits of Recognition:**
+- Tax benefits under Section 80-IAC
+- Faster patent processing
+- Self-certification for labor laws
+- Access to government schemes
+- Networking opportunities
+- Funding support
+
+**Required Documents:**
+- Certificate of incorporation
+- PAN card of the company
+- Board resolution for startup recognition
+- Letter of recommendation (from incubator, accelerator, or government)
+- Brief description of the business
+
+**Timeline:** Recognition is usually granted within 2-3 working days.
+
+*Note: Startup India recognition provides various benefits and should be obtained early in your startup journey.*`;
+
+    suggestions = [
+      "What are the tax benefits for recognized startups?",
+      "How to get funding for startups?",
+      "What government schemes are available for startups?"
+    ];
+  }
   // Startup Compliance
   else if (lowerMessage.includes('startup') || lowerMessage.includes('compliance')) {
     response = `Key compliance requirements for Indian startups:
