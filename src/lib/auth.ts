@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
-import { prisma } from './db';
+import { db } from './db';
 import { User } from '../types';
 
 const JWT_SECRET = process.env.NEXTAUTH_SECRET || 'your-secret-key';
@@ -31,7 +31,7 @@ export async function createUserSession(userId: string): Promise<string> {
   const sessionToken = generateToken(userId);
   const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
   
-  await prisma.userSession.create({
+  await db.userSession.create({
     data: {
       userId,
       sessionToken,
@@ -43,7 +43,7 @@ export async function createUserSession(userId: string): Promise<string> {
 }
 
 export async function getUserFromSession(sessionToken: string): Promise<User | null> {
-  const session = await prisma.userSession.findUnique({
+  const session = await db.userSession.findUnique({
     where: { sessionToken },
     include: { user: true }
   });
@@ -59,7 +59,7 @@ export async function getUserFromSession(sessionToken: string): Promise<User | n
 }
 
 export async function deleteUserSession(sessionToken: string): Promise<void> {
-  await prisma.userSession.delete({
+  await db.userSession.delete({
     where: { sessionToken }
   });
 }
