@@ -12,7 +12,8 @@ import {
   Settings, 
   CreditCard,
   LogOut,
-  Building
+  Building,
+  Bot
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -33,6 +34,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: 'Dashboard', href: '/dashboard', icon: Building },
     { name: 'Documents', href: '/documents', icon: FileText },
     { name: 'Compliance', href: '/compliance', icon: Calendar },
+    { name: 'AI Assistant', href: '/assistant', icon: Bot },
     { name: 'Subscription', href: '/subscription', icon: CreditCard },
     { name: 'Settings', href: '/settings', icon: Settings },
   ];

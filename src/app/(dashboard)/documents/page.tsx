@@ -8,27 +8,91 @@ export default function DocumentsPage() {
   const documents = [
     {
       id: 1,
-      title: 'Employment Agreement Template',
+      title: 'Employment Agreement - TechStart India',
       type: 'Employment Contract',
       status: 'Generated',
       createdAt: '2024-01-15',
-      size: '2.3 MB'
+      size: '2.3 MB',
+      company: 'TechStart India',
+      downloadCount: 3,
+      lastModified: '2024-01-15'
     },
     {
       id: 2,
-      title: 'NDA Template',
+      title: 'NDA Template - Client Meeting',
       type: 'Non-Disclosure Agreement',
       status: 'Draft',
       createdAt: '2024-01-14',
-      size: '1.8 MB'
+      size: '1.8 MB',
+      company: 'InnovateLabs',
+      downloadCount: 1,
+      lastModified: '2024-01-14'
     },
     {
       id: 3,
-      title: 'Service Agreement',
+      title: 'Service Agreement - StartupHub',
       type: 'Service Contract',
       status: 'Generated',
       createdAt: '2024-01-13',
-      size: '3.1 MB'
+      size: '3.1 MB',
+      company: 'StartupHub',
+      downloadCount: 5,
+      lastModified: '2024-01-13'
+    },
+    {
+      id: 4,
+      title: 'GST Registration Certificate',
+      type: 'Compliance Document',
+      status: 'Generated',
+      createdAt: '2024-01-12',
+      size: '1.2 MB',
+      company: 'TechStart India',
+      downloadCount: 2,
+      lastModified: '2024-01-12'
+    },
+    {
+      id: 5,
+      title: 'Terms of Service - Mobile App',
+      type: 'Legal Document',
+      status: 'Under Review',
+      createdAt: '2024-01-11',
+      size: '2.8 MB',
+      company: 'InnovateLabs',
+      downloadCount: 0,
+      lastModified: '2024-01-11'
+    },
+    {
+      id: 6,
+      title: 'Privacy Policy - Web Platform',
+      type: 'Legal Document',
+      status: 'Generated',
+      createdAt: '2024-01-10',
+      size: '1.5 MB',
+      company: 'StartupHub',
+      downloadCount: 4,
+      lastModified: '2024-01-10'
+    },
+    {
+      id: 7,
+      title: 'Partnership Agreement - TechStart',
+      type: 'Partnership Contract',
+      status: 'Generated',
+      createdAt: '2024-01-09',
+      size: '4.2 MB',
+      company: 'TechStart India',
+      downloadCount: 2,
+      lastModified: '2024-01-09'
+    },
+    {
+      id: 8,
+      title: 'Consulting Agreement - InnovateLabs',
+      type: 'Consulting Contract',
+      status: 'Draft',
+      createdAt: '2024-01-08',
+      size: '2.1 MB',
+      company: 'InnovateLabs',
+      downloadCount: 0,
+      lastModified: '2024-01-08'
     }
   ];
 

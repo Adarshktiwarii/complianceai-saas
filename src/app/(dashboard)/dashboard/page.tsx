@@ -15,13 +15,67 @@ interface DashboardStats {
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats>({
-    documentsGenerated: 0,
-    pendingTasks: 0,
-    overdueTasks: 0,
-    totalCompanies: 0
+    documentsGenerated: 12,
+    pendingTasks: 5,
+    overdueTasks: 2,
+    totalCompanies: 3
   });
-  const [recentActivity, setRecentActivity] = useState([]);
-  const [upcomingTasks, setUpcomingTasks] = useState([]);
+  const [recentActivity, setRecentActivity] = useState([
+    {
+      id: 1,
+      description: "Generated Employment Agreement for TechStart India",
+      createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      type: "document_generated"
+    },
+    {
+      id: 2,
+      description: "GST Return filed for InnovateLabs Pvt Ltd",
+      createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+      type: "compliance_completed"
+    },
+    {
+      id: 3,
+      description: "New company 'StartupHub' added to management",
+      createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+      type: "company_added"
+    },
+    {
+      id: 4,
+      description: "NDA template generated for client meeting",
+      createdAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
+      type: "document_generated"
+    }
+  ]);
+  const [upcomingTasks, setUpcomingTasks] = useState([
+    {
+      id: 1,
+      taskName: "File Quarterly GST Return (GSTR-1)",
+      dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+      priority: "high",
+      category: "Tax"
+    },
+    {
+      id: 2,
+      taskName: "Pay TDS for June Salaries",
+      dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+      priority: "critical",
+      category: "Tax"
+    },
+    {
+      id: 3,
+      taskName: "Annual General Meeting (AGM) Filing",
+      dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      priority: "medium",
+      category: "Corporate"
+    },
+    {
+      id: 4,
+      taskName: "Professional Tax Payment (June)",
+      dueDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
+      priority: "high",
+      category: "Tax"
+    }
+  ]);
 
   useEffect(() => {
     fetchDashboardData();
