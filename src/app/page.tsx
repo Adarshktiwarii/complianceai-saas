@@ -146,18 +146,18 @@ export default function HomePage() {
     <div className="min-h-screen bg-slate-50">
       {/* Navbar */}
       <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+        <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center space-x-2 font-bold text-xl text-slate-900 hover:text-slate-700 transition-colors">
             <Shield className="h-6 w-6 text-slate-600" />
             <span>Kavach.ai</span>
           </Link>
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link href="#features" className="text-slate-600 hover:text-slate-900 transition-colors">Features</Link>
-            <Link href="#testimonials" className="text-slate-600 hover:text-slate-900 transition-colors">Testimonials</Link>
-            <Link href="#pricing" className="text-slate-600 hover:text-slate-900 transition-colors">Pricing</Link>
-            <Link href="#contact" className="text-slate-600 hover:text-slate-900 transition-colors">Contact</Link>
-            <Link href="/login" className="text-slate-600 hover:text-slate-900 transition-colors">Sign In</Link>
-            <Button asChild className="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2">
+          <nav className="hidden md:flex items-center space-x-8">
+            <Link href="#features" className="text-slate-600 hover:text-slate-900 transition-colors font-medium">Features</Link>
+            <Link href="#testimonials" className="text-slate-600 hover:text-slate-900 transition-colors font-medium">Testimonials</Link>
+            <Link href="#pricing" className="text-slate-600 hover:text-slate-900 transition-colors font-medium">Pricing</Link>
+            <Link href="#contact" className="text-slate-600 hover:text-slate-900 transition-colors font-medium">Contact</Link>
+            <Link href="/login" className="text-slate-600 hover:text-slate-900 transition-colors font-medium">Sign In</Link>
+            <Button asChild className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2 rounded-md">
               <Link href="/register">Get Started</Link>
             </Button>
           </nav>
@@ -165,7 +165,7 @@ export default function HomePage() {
             <Button 
               variant="ghost" 
               size="icon" 
-              className="text-slate-600"
+              className="text-slate-600 hover:text-slate-900"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -176,13 +176,13 @@ export default function HomePage() {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-slate-200">
-            <div className="px-4 py-4 space-y-4">
-              <Link href="#features" className="block text-slate-600 hover:text-slate-900 transition-colors">Features</Link>
-              <Link href="#testimonials" className="block text-slate-600 hover:text-slate-900 transition-colors">Testimonials</Link>
-              <Link href="#pricing" className="block text-slate-600 hover:text-slate-900 transition-colors">Pricing</Link>
-              <Link href="#contact" className="block text-slate-600 hover:text-slate-900 transition-colors">Contact</Link>
-              <Link href="/login" className="block text-slate-600 hover:text-slate-900 transition-colors">Sign In</Link>
-              <Button asChild className="w-full bg-slate-900 hover:bg-slate-800 text-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-4">
+              <Link href="#features" className="block text-slate-600 hover:text-slate-900 transition-colors font-medium">Features</Link>
+              <Link href="#testimonials" className="block text-slate-600 hover:text-slate-900 transition-colors font-medium">Testimonials</Link>
+              <Link href="#pricing" className="block text-slate-600 hover:text-slate-900 transition-colors font-medium">Pricing</Link>
+              <Link href="#contact" className="block text-slate-600 hover:text-slate-900 transition-colors font-medium">Contact</Link>
+              <Link href="/login" className="block text-slate-600 hover:text-slate-900 transition-colors font-medium">Sign In</Link>
+              <Button asChild className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-md">
                 <Link href="/register">Get Started</Link>
               </Button>
             </div>
@@ -192,41 +192,41 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="py-20 md:py-32 text-center">
-        <div className="container mx-auto px-4">
-          <Badge variant="secondary" className="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-sm mb-6">
-            <Sparkles className="h-3 w-3 mr-1" /> AI-Powered Legal Compliance for Indian Startups
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Badge variant="secondary" className="bg-slate-100 text-slate-700 px-4 py-2 rounded-full text-sm mb-8 inline-flex items-center">
+            <Sparkles className="h-4 w-4 mr-2" /> AI-Powered Legal Compliance for Indian Startups
           </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6 text-slate-900">
+          <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-8 text-slate-900 max-w-5xl mx-auto">
             Navigate Legal Compliance with <br className="hidden md:inline"/> AI-Powered Intelligence
           </h1>
-          <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-slate-600 mb-12 max-w-4xl mx-auto leading-relaxed">
             Kavach.ai is your all-in-one platform for automated legal document generation, AI-powered legal assistance, and proactive compliance monitoring, specifically designed for the Indian startup ecosystem.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <Button asChild className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3">
-              <Link href="/register">Start Free Trial <ArrowRight className="ml-2 h-4 w-4" /></Link>
+          <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-16">
+            <Button asChild className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-3 rounded-md text-lg font-medium">
+              <Link href="/register">Start Free Trial <ArrowRight className="ml-2 h-5 w-5" /></Link>
             </Button>
             <Button 
               variant="outline" 
-              className="border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3"
+              className="border-slate-300 text-slate-700 hover:bg-slate-50 px-8 py-3 rounded-md text-lg font-medium"
               onClick={() => setIsVideoOpen(true)}
             >
-              <Play className="mr-2 h-4 w-4" /> Watch Demo
+              <Play className="mr-2 h-5 w-5" /> Watch Demo
             </Button>
           </div>
 
-          <div className="mt-16 flex flex-wrap justify-center gap-8 text-slate-600">
+          <div className="flex flex-wrap justify-center items-center gap-8 text-slate-600">
             <div className="flex items-center">
-              <Users className="h-5 w-5 text-slate-500 mr-2" />
-              <span>10,000+ Startups Trust Us</span>
+              <Users className="h-5 w-5 text-slate-500 mr-3" />
+              <span className="font-medium">10,000+ Startups Trust Us</span>
             </div>
             <div className="flex items-center">
-              <FileText className="h-5 w-5 text-slate-500 mr-2" />
-              <span>50,000+ Documents Generated</span>
+              <FileText className="h-5 w-5 text-slate-500 mr-3" />
+              <span className="font-medium">50,000+ Documents Generated</span>
             </div>
             <div className="flex items-center">
-              <Zap className="h-5 w-5 text-slate-500 mr-2" />
-              <span>99.9% Uptime Guarantee</span>
+              <Zap className="h-5 w-5 text-slate-500 mr-3" />
+              <span className="font-medium">99.9% Uptime Guarantee</span>
             </div>
           </div>
         </div>
@@ -258,38 +258,38 @@ export default function HomePage() {
 
       {/* Features Section */}
       <section id="features" className="py-20 md:py-32 bg-white">
-        <div className="container mx-auto px-4 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-900">
             Powerful Features Designed for You
           </h2>
-          <p className="text-lg text-slate-600 mb-16 max-w-3xl mx-auto">
+          <p className="text-lg text-slate-600 mb-16 max-w-4xl mx-auto leading-relaxed">
             From AI-powered legal assistance to automated compliance, Kavach.ai equips you with the tools to navigate India's legal landscape with confidence.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <Card 
                 key={index} 
-                className="bg-white border border-slate-200 text-slate-900 rounded-lg shadow-sm hover:shadow-md transition-all duration-300"
+                className="bg-white border border-slate-200 text-slate-900 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-6"
               >
-                <CardHeader className="text-center pb-4">
-                  <div className="mx-auto w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
+                <CardHeader className="text-center pb-6">
+                  <div className="mx-auto w-14 h-14 bg-slate-100 rounded-lg flex items-center justify-center mb-6">
                     <div className="text-slate-600">
                       {feature.icon}
                     </div>
                   </div>
-                  <CardTitle className="text-xl font-semibold text-slate-900">
+                  <CardTitle className="text-xl font-semibold text-slate-900 mb-4">
                     {feature.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-center">
-                  <p className="text-slate-600 mb-4">
+                  <p className="text-slate-600 mb-6 leading-relaxed">
                     {feature.description}
                   </p>
-                  <ul className="space-y-2 text-sm text-slate-500">
+                  <ul className="space-y-3 text-sm text-slate-500">
                     {feature.benefits.map((benefit, i) => (
                       <li key={i} className="flex items-center justify-center">
-                        <CheckCircle className="h-4 w-4 text-slate-400 mr-2" />
-                        {benefit}
+                        <CheckCircle className="h-4 w-4 text-slate-400 mr-3 flex-shrink-0" />
+                        <span className="font-medium">{benefit}</span>
                       </li>
                     ))}
                   </ul>
@@ -302,38 +302,38 @@ export default function HomePage() {
 
       {/* Testimonials Section */}
       <section id="testimonials" className="py-20 md:py-32 bg-slate-50">
-        <div className="container mx-auto px-4 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-900">
             What Our Customers Say
           </h2>
-          <p className="text-lg text-slate-600 mb-16 max-w-3xl mx-auto">
+          <p className="text-lg text-slate-600 mb-16 max-w-4xl mx-auto leading-relaxed">
             Hear from the Indian startups who are thriving with Kavach.ai.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <Card 
                 key={index} 
-                className="bg-white border border-slate-200 text-slate-900 rounded-lg shadow-sm p-6"
+                className="bg-white border border-slate-200 text-slate-900 rounded-lg shadow-sm p-8 hover:shadow-md transition-all duration-300"
               >
                 <CardContent className="text-center">
-                  <div className="flex justify-center mb-4">
+                  <div className="flex justify-center mb-6">
                     {[...Array(5)].map((_, i) => (
                       <Star 
                         key={i} 
-                        className={`h-4 w-4 ${i < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-slate-300'}`} 
+                        className={`h-5 w-5 ${i < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-slate-300'}`} 
                       />
                     ))}
                   </div>
-                  <p className="text-slate-600 mb-6 italic">"{testimonial.quote}"</p>
+                  <p className="text-slate-600 mb-8 italic text-lg leading-relaxed">"{testimonial.quote}"</p>
                   <div className="flex items-center justify-center">
                     <img 
                       src={testimonial.avatar} 
                       alt={testimonial.name} 
-                      className="w-10 h-10 rounded-full mr-3 border border-slate-200"
+                      className="w-12 h-12 rounded-full mr-4 border-2 border-slate-200"
                     />
-                    <div>
-                      <p className="font-semibold text-slate-900">{testimonial.name}</p>
-                      <p className="text-sm text-slate-500">{testimonial.title}</p>
+                    <div className="text-left">
+                      <p className="font-semibold text-slate-900 text-lg">{testimonial.name}</p>
+                      <p className="text-slate-500">{testimonial.title}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -345,44 +345,44 @@ export default function HomePage() {
 
       {/* Pricing Section */}
       <section id="pricing" className="py-20 md:py-32 bg-white">
-        <div className="container mx-auto px-4 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-900">
             Simple, Transparent Pricing
           </h2>
-          <p className="text-lg text-slate-600 mb-16 max-w-3xl mx-auto">
+          <p className="text-lg text-slate-600 mb-16 max-w-4xl mx-auto leading-relaxed">
             Choose the plan that best fits your startup's needs. No hidden fees, just clear value.
           </p>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {pricingPlans.map((plan, index) => (
               <Card 
                 key={index} 
-                className={`relative bg-white border text-slate-900 rounded-lg shadow-sm p-8 ${plan.isPopular ? 'border-slate-900 shadow-lg' : 'border-slate-200'}`}
+                className={`relative bg-white border text-slate-900 rounded-lg shadow-sm p-8 hover:shadow-md transition-all duration-300 ${plan.isPopular ? 'border-slate-900 shadow-lg' : 'border-slate-200'}`}
               >
                 {plan.isPopular && (
-                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-3 py-1 rounded-full text-sm">
+                  <Badge className="absolute -top-4 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-4 py-2 rounded-full text-sm font-medium">
                     Most Popular
                   </Badge>
                 )}
-                <CardHeader className="text-center pb-6">
-                  <CardTitle className="text-2xl font-bold text-slate-900 mb-2">
+                <CardHeader className="text-center pb-8">
+                  <CardTitle className="text-2xl font-bold text-slate-900 mb-4">
                     {plan.name}
                   </CardTitle>
-                  <p className="text-slate-600">{plan.description}</p>
-                  <p className="mt-4 text-4xl font-bold text-slate-900">
+                  <p className="text-slate-600 mb-6">{plan.description}</p>
+                  <p className="text-4xl font-bold text-slate-900 mb-2">
                     {plan.price}
                     {plan.frequency && <span className="text-lg font-normal text-slate-500">{plan.frequency}</span>}
                   </p>
                 </CardHeader>
                 <CardContent className="flex-grow flex flex-col">
-                  <ul className="space-y-3 text-left text-slate-600 flex-grow mb-6">
+                  <ul className="space-y-4 text-left text-slate-600 flex-grow mb-8">
                     {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-center text-sm">
-                        <CheckCircle className="h-4 w-4 text-slate-400 mr-3 flex-shrink-0" />
-                        {feature}
+                      <li key={i} className="flex items-start text-sm">
+                        <CheckCircle className="h-5 w-5 text-slate-400 mr-3 flex-shrink-0 mt-0.5" />
+                        <span className="font-medium">{feature}</span>
                       </li>
                     ))}
                   </ul>
-                  <Button asChild className={`w-full py-2 ${
+                  <Button asChild className={`w-full py-3 rounded-md text-lg font-medium ${
                     plan.isPopular 
                       ? 'bg-slate-900 hover:bg-slate-800 text-white' 
                       : 'bg-slate-100 border border-slate-300 text-slate-900 hover:bg-slate-200'
@@ -400,36 +400,36 @@ export default function HomePage() {
 
       {/* Call to Action */}
       <section className="py-20 md:py-32 bg-slate-900 text-center">
-        <div className="container mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
             Ready to Simplify Your Compliance?
           </h2>
-          <p className="text-lg text-slate-300 mb-10 max-w-3xl mx-auto">
+          <p className="text-lg text-slate-300 mb-12 max-w-4xl mx-auto leading-relaxed">
             Join thousands of Indian startups who are already leveraging Kavach.ai to grow confidently.
           </p>
-          <Button asChild className="bg-white text-slate-900 hover:bg-slate-100 px-8 py-3">
-            <Link href="/register">Get Started Free <ChevronRight className="ml-2 h-4 w-4" /></Link>
+          <Button asChild className="bg-white text-slate-900 hover:bg-slate-100 px-8 py-4 rounded-md text-lg font-medium">
+            <Link href="/register">Get Started Free <ChevronRight className="ml-2 h-5 w-5" /></Link>
           </Button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer id="contact" className="bg-slate-100 py-12 text-slate-600">
-        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="space-y-4">
+      <footer id="contact" className="bg-slate-100 py-16 text-slate-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-12">
+          <div className="space-y-6">
             <Link href="/" className="flex items-center space-x-2 font-bold text-xl text-slate-900 hover:text-slate-700 transition-colors">
               <Shield className="h-6 w-6 text-slate-600" />
               <span>Kavach.ai</span>
             </Link>
-            <p className="text-slate-500">Your trusted partner for legal compliance in India.</p>
-            <div className="flex space-x-4">
-              <Button asChild variant="outline" className="border-slate-300 text-slate-600 hover:bg-slate-50">
+            <p className="text-slate-500 leading-relaxed">Your trusted partner for legal compliance in India.</p>
+            <div className="flex flex-col space-y-3">
+              <Button asChild variant="outline" className="border-slate-300 text-slate-600 hover:bg-slate-50 justify-start">
                 <Link href="mailto:support@kavach.ai">
                   <Mail className="h-4 w-4 mr-2" />
                   support@kavach.ai
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="border-slate-300 text-slate-600 hover:bg-slate-50">
+              <Button asChild variant="outline" className="border-slate-300 text-slate-600 hover:bg-slate-50 justify-start">
                 <Link href="tel:+919876543210">
                   <Phone className="h-4 w-4 mr-2" />
                   +91 98765 43210
@@ -438,40 +438,42 @@ export default function HomePage() {
             </div>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-slate-900">Product</h3>
-            <ul className="space-y-2">
-              <li><Link href="#features" className="text-slate-500 hover:text-slate-900 transition-colors">Features</Link></li>
-              <li><Link href="#pricing" className="text-slate-500 hover:text-slate-900 transition-colors">Pricing</Link></li>
-              <li><Link href="/documents" className="text-slate-500 hover:text-slate-900 transition-colors">Documentation</Link></li>
-              <li><Link href="/api" className="text-slate-500 hover:text-slate-900 transition-colors">API</Link></li>
+            <h3 className="text-lg font-semibold mb-6 text-slate-900">Product</h3>
+            <ul className="space-y-3">
+              <li><Link href="#features" className="text-slate-500 hover:text-slate-900 transition-colors font-medium">Features</Link></li>
+              <li><Link href="#pricing" className="text-slate-500 hover:text-slate-900 transition-colors font-medium">Pricing</Link></li>
+              <li><Link href="/documents" className="text-slate-500 hover:text-slate-900 transition-colors font-medium">Documentation</Link></li>
+              <li><Link href="/api" className="text-slate-500 hover:text-slate-900 transition-colors font-medium">API</Link></li>
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-slate-900">Company</h3>
-            <ul className="space-y-2">
-              <li><Link href="/about" className="text-slate-500 hover:text-slate-900 transition-colors">About</Link></li>
-              <li><Link href="/blog" className="text-slate-500 hover:text-slate-900 transition-colors">Blog</Link></li>
-              <li><Link href="/careers" className="text-slate-500 hover:text-slate-900 transition-colors">Careers</Link></li>
-              <li><Link href="#contact" className="text-slate-500 hover:text-slate-900 transition-colors">Contact</Link></li>
+            <h3 className="text-lg font-semibold mb-6 text-slate-900">Company</h3>
+            <ul className="space-y-3">
+              <li><Link href="/about" className="text-slate-500 hover:text-slate-900 transition-colors font-medium">About</Link></li>
+              <li><Link href="/blog" className="text-slate-500 hover:text-slate-900 transition-colors font-medium">Blog</Link></li>
+              <li><Link href="/careers" className="text-slate-500 hover:text-slate-900 transition-colors font-medium">Careers</Link></li>
+              <li><Link href="#contact" className="text-slate-500 hover:text-slate-900 transition-colors font-medium">Contact</Link></li>
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-slate-900">Legal</h3>
-            <ul className="space-y-2">
-              <li><Link href="/privacy" className="text-slate-500 hover:text-slate-900 transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="text-slate-500 hover:text-slate-900 transition-colors">Terms of Service</Link></li>
-              <li><Link href="/cookies" className="text-slate-500 hover:text-slate-900 transition-colors">Cookie Policy</Link></li>
-              <li><Link href="/security" className="text-slate-500 hover:text-slate-900 transition-colors">Security</Link></li>
+            <h3 className="text-lg font-semibold mb-6 text-slate-900">Legal</h3>
+            <ul className="space-y-3">
+              <li><Link href="/privacy" className="text-slate-500 hover:text-slate-900 transition-colors font-medium">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="text-slate-500 hover:text-slate-900 transition-colors font-medium">Terms of Service</Link></li>
+              <li><Link href="/cookies" className="text-slate-500 hover:text-slate-900 transition-colors font-medium">Cookie Policy</Link></li>
+              <li><Link href="/security" className="text-slate-500 hover:text-slate-900 transition-colors font-medium">Security</Link></li>
             </ul>
           </div>
         </div>
-        <div className="border-t border-slate-200 mt-8 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-slate-500 text-sm">© 2024 Kavach.ai. All rights reserved.</p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="/privacy" className="text-slate-500 hover:text-slate-900 transition-colors text-sm">Privacy Policy</Link>
-              <Link href="/terms" className="text-slate-500 hover:text-slate-900 transition-colors text-sm">Terms of Service</Link>
-              <Link href="/cookies" className="text-slate-500 hover:text-slate-900 transition-colors text-sm">Cookie Policy</Link>
+        <div className="border-t border-slate-200 mt-12 pt-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <p className="text-slate-500 text-sm">© 2024 Kavach.ai. All rights reserved.</p>
+              <div className="flex space-x-6 mt-4 md:mt-0">
+                <Link href="/privacy" className="text-slate-500 hover:text-slate-900 transition-colors text-sm font-medium">Privacy Policy</Link>
+                <Link href="/terms" className="text-slate-500 hover:text-slate-900 transition-colors text-sm font-medium">Terms of Service</Link>
+                <Link href="/cookies" className="text-slate-500 hover:text-slate-900 transition-colors text-sm font-medium">Cookie Policy</Link>
+              </div>
             </div>
           </div>
         </div>
