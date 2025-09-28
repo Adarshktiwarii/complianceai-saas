@@ -52,8 +52,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } lg:translate-x-0`}>
-        <div className="flex h-16 items-center justify-between px-6 border-b">
-              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Kavach.ai</h1>
+        <div className="flex h-16 items-center justify-between px-6 border-b border-gray-200">
+              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Kavach.ai</h1>
           <Button
             variant="ghost"
             size="sm"
@@ -83,8 +83,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Main content */}
       <div className="lg:ml-64">
-        {/* Top header */}
-        <header className="bg-white shadow-sm border-b px-6 py-4">
+            {/* Top header */}
+            <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between">
             <Button
               variant="ghost"
