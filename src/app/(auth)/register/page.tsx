@@ -75,7 +75,7 @@ export default function RegisterPage() {
               <Scale className="h-6 w-6 text-white" />
             </div>
             <span className="ml-3 text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              ComplianceAI
+              Kavach.ai
             </span>
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Create your account</h1>
@@ -86,7 +86,7 @@ export default function RegisterPage() {
           <CardHeader className="space-y-1 pb-6">
             <CardTitle className="text-2xl font-semibold text-center">Sign up</CardTitle>
             <CardDescription className="text-center text-gray-600">
-              Join thousands of Indian startups using ComplianceAI
+              Join thousands of Indian startups using Kavach.ai
             </CardDescription>
           </CardHeader>
           

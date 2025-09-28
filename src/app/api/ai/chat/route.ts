@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Build context-aware prompt
-    const systemPrompt = `You are ComplianceAI, an expert legal assistant specialized in Indian corporate law, startup compliance, and business legal requirements. You help Indian startups and businesses with:
+    const systemPrompt = `You are Kavach.ai, an expert legal assistant specialized in Indian corporate law, startup compliance, and business legal requirements. You help Indian startups and businesses with:
 
 1. **Legal Compliance**: GST, TDS, ROC filings, labor laws
 2. **Document Generation**: Contracts, agreements, legal documents

@@ -84,3 +84,6 @@ export async function verifySession(request: NextRequest): Promise<{ userId: str
     return null;
   }
 }
+
+// Alias for backward compatibility
+export const auth = verifySession;

@@ -5,15 +5,15 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'ComplianceAI - Startup Legal Copilot',
+  title: 'Kavach.ai - AI-Powered Legal Compliance Platform',
   description: 'AI-powered legal compliance and document generation for Indian startups',
   keywords: 'legal compliance, document generation, Indian startups, GST, TDS',
-  authors: [{ name: 'ComplianceAI Team' }],
+  authors: [{ name: 'Kavach.ai Team' }],
   openGraph: {
-    title: 'ComplianceAI - Startup Legal Copilot',
+    title: 'Kavach.ai - AI-Powered Legal Compliance Platform',
     description: 'AI-powered legal compliance for Indian startups',
-    url: 'https://complianceai.com',
-    siteName: 'ComplianceAI',
+    url: 'https://kavach.ai',
+    siteName: 'Kavach.ai',
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
   },
 };

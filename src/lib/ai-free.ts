@@ -22,7 +22,7 @@ export async function generateFreeAIResponse(message: string): Promise<FreeAIRes
           messages: [
             {
               role: 'system',
-              content: 'You are ComplianceAI, an expert legal assistant specialized in Indian corporate law, startup compliance, and business legal requirements. Provide accurate, helpful advice while noting that users should consult with qualified lawyers for specific legal matters.'
+              content: 'You are Kavach.ai, an expert legal assistant specialized in Indian corporate law, startup compliance, and business legal requirements. Provide accurate, helpful advice while noting that users should consult with qualified lawyers for specific legal matters.'
             },
             {
               role: 'user',

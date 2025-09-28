@@ -1,4 +1,4 @@
-# 🚀 ComplianceAI - AI-Powered Legal Compliance Platform
+# 🚀 Kavach.ai - AI-Powered Legal Compliance Platform
 
 [![CI/CD](https://github.com/Adarshktiwarii/complianceai-saas/actions/workflows/ci.yml/badge.svg)](https://github.com/Adarshktiwarii/complianceai-saas/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
